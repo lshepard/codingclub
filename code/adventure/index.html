@@ -1,0 +1,221 @@
+<html>
+    <head>
+        <title>Choose your own adventure</title>
+        <script src="https://cdn.jsdelivr.net/npm/p5@1.11.3/lib/p5.min.js"></script>
+        <script>
+            /*
+  Use this template to make your text-based adventure game
+  
+  
+  
+  Bonus practice challenges:
+    * add graphics or an animation to the pages
+    * replace the if/then structure with a "switch" statement
+    * add something interactive to the canvas on a page (eg. click on the candy you want)
+    * make a more complex story structure with more branches and/or loops
+  
+*/
+
+/* Oregon Trail Adventure Game
+   Background: Black
+   Text: Neon Green
+*/
+
+var buttonA, buttonB, buttonC; // buttons for the choices
+var state;   // current state in the story
+var question; // narrative text
+
+function setup() {
+  createCanvas(400, 400);
+  
+  // Create three buttons
+  buttonA = createButton('Option A');
+  buttonB = createButton('Option B');
+  buttonC = createButton('Option C');
+  
+  // Position buttons along the bottom of the canvas
+  buttonA.position(50, 410);
+  buttonB.position(150, 410);
+  buttonC.position(250, 410);
+  
+  // Set up mouse pressed events
+  buttonA.mousePressed(optionA);
+  buttonB.mousePressed(optionB);
+  buttonC.mousePressed(optionC);
+  
+  textAlign(CENTER, TOP);
+  textSize(18);
+  
+  // Set the text wrap mode to WORD so that long text is broken up neatly.
+  textWrap(WORD);
+  
+  // Initial state: your life in 1848
+  state = "start";
+  question = "It is 1848 and you are a carpenter living a bleak life in the wilds of Illinois. Your business is low and you don’t have much hope for your family here. You hear tell of others setting out westward, towards Oregon. You have enough saved to follow their trail. Do you head west?";
+  
+  // For the initial decision, only two choices are needed.
+  buttonA.html("Yes");
+  buttonB.html("No");
+  buttonC.hide();
+}
+
+function draw() {
+  background(0);              // Black background
+  fill(57, 255, 20);          // Neon green text
+  
+  // Draw the text in a box with margins.
+  // The text will start at x = 20, y = 50 and wrap within a width of 360 pixels.
+  text(question, 20, 50, width - 40, height - 100);
+}
+
+// Button A (left-most) – handles one branch of each decision
+function optionA() {
+  if (state == "start") {
+    // Choose to head west
+    state = "departure";
+    question = "You must leave your home and head to Independence, Missouri to set out on the trail. You may leave in April or July. Which do you choose?";
+    buttonA.html("April");
+    buttonB.html("July");
+    buttonC.hide();
+  } else if (state == "departure") {
+    // From departure, Option A means you leave in April.
+    state = "april";
+    question = "Before leaving you must stock your wagon. You may choose to pack extra food, additional ammunition, or warmer clothing. Which do you choose?";
+    buttonA.html("Food");
+    buttonB.html("Ammunition");
+    buttonC.html("Clothing");
+    buttonC.show();
+  } else if (state == "april") {
+    // In the April branch, Option A: pack extra food.
+    state = "april_food";
+    question = "You pack extra food. Your oxen are well-fed, and you start the journey with a hearty meal. After 102 miles, you reach the Kansas River Crossing with plenty of supplies. Do you continue on the trail or rest?";
+    buttonA.html("Continue");
+    buttonB.html("Rest");
+    buttonC.hide();
+  } else if (state == "july") {
+    // In the July branch, Option A: pack extra food.
+    state = "july_food";
+    question = "You pack extra food. The early summer sun bakes your supplies, but your oxen remain strong. After 102 miles to the Kansas River Crossing, you start to feel the strain of the heat. Do you seek water or push forward?";
+    buttonA.html("Seek Water");
+    buttonB.html("Push Forward");
+    buttonC.hide();
+  } else if (state == "april_food") {
+    // In the april_food branch, Option A: continue on the trail.
+    state = "trail_continue";
+    question = "You press on, facing challenges ahead but fueled by determination. The trail is rough but you persist. To be continued...";
+    buttonA.hide();
+    buttonB.hide();
+    buttonC.hide();
+  } else if (state == "april_ammo") {
+    // In the april_ammo branch, Option A: choose to fight bandits.
+    state = "april_ammo_fight";
+    question = "You bravely fight off the bandits but suffer injuries. Your journey continues with scars. To be continued...";
+    buttonA.hide();
+    buttonB.hide();
+    buttonC.hide();
+  } else if (state == "april_clothing") {
+    // In the april_clothing branch, Option A: try to climb the mountain pass.
+    state = "april_climb";
+    question = "The climb is treacherous, but your gear keeps you warm. You overcome the pass, but your journey is filled with hardship. To be continued...";
+    buttonA.hide();
+    buttonB.hide();
+    buttonC.hide();
+  } else if (state == "july_food") {
+    // In the july_food branch, Option A: seek water.
+    state = "july_water";
+    question = "You stop to water your oxen. The break revives you, and you continue your journey, albeit delayed. To be continued...";
+    buttonA.hide();
+    buttonB.hide();
+    buttonC.hide();
+  } else if (state == "july_ammo") {
+    // In the july_ammo branch, Option A: choose to rest.
+    state = "july_ammo_rest";
+    question = "You take a moment to rest, recovering from the near ambush. Your journey continues with caution. To be continued...";
+    buttonA.hide();
+    buttonB.hide();
+    buttonC.hide();
+  }
+}
+
+// Button B (middle) – handles the other branch for each decision
+function optionB() {
+  if (state == "start") {
+    // Choose not to head west.
+    state = "stay";
+    question = "You are not brave but you may be wise. You avoid the dangers of the trail but still die young due to a lack of proper medical care.";
+    buttonA.hide();
+    buttonB.hide();
+    buttonC.hide();
+  } else if (state == "departure") {
+    // From departure, Option B means you leave in July.
+    state = "july";
+    question = "Before leaving you must stock your wagon. You may choose to pack extra food, warmer clothing, or ammunition. Which do you choose?";
+    buttonA.html("Food");
+    buttonB.html("Clothing");
+    buttonC.html("Ammunition");
+    buttonC.show();
+  } else if (state == "april") {
+    // In the April branch, Option B: pack extra ammunition.
+    state = "april_ammo";
+    question = "You pack extra ammunition. You are prepared to defend your wagon from potential threats. However, the extra weight slows you down. At the Kansas River Crossing, you're ambushed by bandits. Do you fight or flee?";
+    buttonA.html("Fight");
+    buttonB.html("Flee");
+    buttonC.hide();
+  } else if (state == "july_food") {
+    // In the july_food branch, Option B: push forward under the heat.
+    state = "july_forward";
+    question = "You push forward under the scorching sun, but exhaustion sets in. The journey becomes perilous and you die. Game Over.";
+    buttonA.hide();
+    buttonB.hide();
+    buttonC.hide();
+  } else if (state == "july_ammo") {
+    // In the july_ammo branch, Option B: choose to continue.
+    state = "july_ammo_continue";
+    question = "You decide to press on despite the dangers. The trail is treacherous, but you keep moving forward, driven by hope.";
+    buttonA.hide();
+    buttonB.hide();
+    buttonC.hide();
+  } else if (state == "april_food") {
+    // In the april_food branch, Option B: choose to rest.
+    state = "trail_rest";
+    question = "You take time to rest, but the delay causes problems. Supplies run low and hardships mount. You die of dyssentary. Game Over.";
+    buttonA.hide();
+    buttonB.hide();
+    buttonC.hide();
+  } else if (state == "april_clothing") {
+    // In the april_clothing branch, Option B: go around the mountain pass.
+    state = "april_around";
+    question = "You choose a safer path. The detour adds days to your journey, but you arrive at your destination safely.";
+    buttonA.hide();
+    buttonB.hide();
+    buttonC.hide();
+  }
+}
+
+// Button C (right-most) – handles the third option when applicable
+function optionC() {
+  if (state == "july") {
+    // In the July branch, Option C: pack ammunition.
+    state = "july_ammo";
+    question = "You pack ammunition, preparing for any unforeseen threats. The extra defense gives you confidence. However, the added weight causes delays. At the Kansas River Crossing, you narrowly avoid an ambush. Do you rest or continue?";
+    buttonA.html("Rest");
+    buttonB.html("Continue");
+    buttonC.hide();
+  } else if (state == "april") {
+    // In the April branch, Option C: pack warmer clothing.
+    state = "april_clothing";
+    question = "You pack warmer clothing to protect you from the cold nights. After 102 miles, you face a steep mountain pass. Do you try to climb or go around?";
+    buttonA.html("Climb");
+    buttonB.html("Go Around");
+    buttonC.hide();
+  }
+}
+
+
+        </script>
+    </head>
+    <body>
+        <main>
+        </main>
+    </body>
+</html>
